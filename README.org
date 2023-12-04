@@ -1,0 +1,5 @@
+#+title: Experiments
+
+* Just experiments
+
+do not try to understand, is just experiments, on the Odin programming language
