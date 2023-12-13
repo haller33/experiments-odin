@@ -1,7 +1,6 @@
 package main
 
-import clib "core:c"
-import "core:c/libc"
+import libc "core:c"
 import "core:fmt"
 import lua54 "vendor:lua/5.4"
 
@@ -22,11 +21,13 @@ main :: proc() {
 
   fmt.println("In Odin, calling Lua\n")
 
-  int_ret: clib.int = lua54.pcall(StateL, 0, 0, 0, 0)
+  int_ret: libc.int = lua54.pcall(StateL, 0, 0, 0, 0)
   if !(int_ret == 0) {
     fmt.println(StateL)
     lua54.L_error(StateL, "lua pcall() Failed\n")
   }
+
+  fmt.println(StateL)
 
   fmt.println("Back in Odin again\n")
 
