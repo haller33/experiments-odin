@@ -13,8 +13,10 @@ TITLE :: "Test Window"
 SCREEN_WITH :: 800
 SCREEN_HEIGHT :: 600
 
-
-framebuffer_size_callback :: proc "c" (window: glfw.WindowHandle, width_local, height_local: libc.int) {
+framebuffer_size_callback :: proc "c" (
+  window: glfw.WindowHandle,
+  width_local, height_local: libc.int,
+) {
 
   gl.Viewport(0, 0, width_local, height_local)
 }
@@ -28,7 +30,7 @@ main :: proc() {
   glfw.WindowHint(glfw.CONTEXT_VERSION_MINOR, 3)
   glfw.WindowHint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 
-  wiwndow_handle: glfw.WindowHandle = glfw.CreateWindow(
+  window_handle: glfw.WindowHandle = glfw.CreateWindow(
     SCREEN_WITH,
     SCREEN_HEIGHT,
     TITLE,
@@ -37,11 +39,11 @@ main :: proc() {
   )
 
   defer glfw.Terminate()
-  defer glfw.DestroyWindow(wiwndow_handle)
+  defer glfw.DestroyWindow(window_handle)
 
-  glfw.MakeContextCurrent(wiwndow_handle)
+  glfw.MakeContextCurrent(window_handle)
 
-  glfw.SetFramebufferSizeCallback(wiwndow_handle, framebuffer_size_callback)
+  glfw.SetFramebufferSizeCallback(window_handle, framebuffer_size_callback)
 
   gl.load_up_to(
     glfw.VERSION_MAJOR,
@@ -49,15 +51,22 @@ main :: proc() {
     glfw.gl_set_proc_address,
   )
 
-  for !bool(glfw.WindowShouldClose(wiwndow_handle)) {
+  for !bool(glfw.WindowShouldClose(window_handle)) {
 
-    if glfw.GetKey(wiwndow_handle, glfw.KEY_ESCAPE) == glfw.PRESS {
-      glfw.SetWindowShouldClose(wiwndow_handle, true)
-    }
+    process_input(window_handle)
 
-    glfw.SwapBuffers(wiwndow_handle)
+
+    glfw.SwapBuffers(window_handle)
     glfw.PollEvents()
   }
 
   return
+}
+
+process_input :: proc(window_handle: glfw.WindowHandle) {
+
+
+  if glfw.GetKey(window_handle, glfw.KEY_ESCAPE) == glfw.PRESS {
+    glfw.SetWindowShouldClose(window_handle, true)
+  }
 }
